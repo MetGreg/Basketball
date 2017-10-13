@@ -13,31 +13,41 @@ import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import pandas as pd
 
-#################
-# Configuration #
-#################
+
+# =============================================================================
+# # Configuration
+# =============================================================================
 data_file = 'hit_ratio_data.csv'
 plt.style.use('seaborn')
 
-###############
-# Handle data #
-###############
+
+# =============================================================================
+# # Handle data
+# =============================================================================
 data = pd.read_csv(data_file)
 time = pd.to_datetime(data['date'], format='%d.%m.%Y')
-three_pt_shots = data['3er_hits']/data['3er_attempts']*100
-two_pt_shots = data['2er_hits']/data['2er_attempts']*100
-one_pt_shots = data['1er_hits']/data['1er_attempts']*100
-free_throws_game = data['1er_hits_g']/data['1er_attempts_g']*100
+three_pt_shots = (data['3er_hits']/data['3er_attempts']*100).fillna(
+        method='ffill'
+        )
+two_pt_shots = (data['2er_hits']/data['2er_attempts']*100).fillna(
+        method='ffill'
+        )
+one_pt_shots = (data['1er_hits']/data['1er_attempts']*100).fillna(
+        method='ffill'
+        )
+free_throws_game = (data['1er_hits_g']/data['1er_attempts_g']*100).fillna(
+        method='ffill'
+        )
 
 
-#############
-# Plot data #
-#############
+# =============================================================================
+# # Plot data
+# =============================================================================
 plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
 plt.plot(time, one_pt_shots, label='1er')
 plt.plot(time, two_pt_shots, label='2er')
 plt.plot(time, three_pt_shots, label='3er')
-plt.plot(time, free_throws_game, label='game')
+plt.plot(time, free_throws_game, label='1er game')
 plt.ylim(0, 100)
 plt.xlabel('Date', fontsize=16)
 plt.ylabel('Hit ratio [%]', fontsize=16)
