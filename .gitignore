@@ -101,5 +101,5 @@ ENV/
 .mypy_cache/
 
 # Added by Gregor
-hit_ratio_data.csv
+*.csv
 
